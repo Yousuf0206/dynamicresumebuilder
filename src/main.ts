@@ -1,4 +1,4 @@
-// Define ResumeData interface
+// Define the ResumeData interface
 interface ResumeData {
   name: string;
   email: string;
@@ -12,14 +12,11 @@ interface ResumeData {
   picture: File | null;
 }
 
-// Main container element
-const appContainer = document.getElementById("app");
-
+// Create and display the form
 function createForm() {
   const formContainer = document.createElement("div");
   formContainer.classList.add("container");
 
-  // Form Title
   const title = document.createElement("h1");
   title.innerText = "Professional Resume Builder";
 
@@ -51,7 +48,6 @@ function createForm() {
     form.appendChild(input);
   });
 
-  // Picture upload
   const pictureLabel = document.createElement("label");
   pictureLabel.innerText = "Upload Picture";
   form.appendChild(pictureLabel);
@@ -62,20 +58,24 @@ function createForm() {
   pictureInput.accept = "image/*";
   form.appendChild(pictureInput);
 
-  const submitButton = document.createElement("button");
-  submitButton.type = "button";
-  submitButton.innerText = "Generate Resume";
-  submitButton.addEventListener("click", handleFormSubmit);
+  const generateButton = document.createElement("button");
+  generateButton.type = "button";
+  generateButton.innerText = "Generate Resume";
+  generateButton.addEventListener("click", handleFormSubmit);
 
-  form.appendChild(submitButton);
+  form.appendChild(generateButton);
   formContainer.appendChild(title);
   formContainer.appendChild(form);
 
+  const appContainer = document.getElementById("app");
   if (appContainer) {
     appContainer.appendChild(formContainer);
+  } else {
+    console.error("Container element with id 'app' not found.");
   }
 }
 
+// Handle form submission
 function handleFormSubmit() {
   const formData: ResumeData = {
     name: (document.getElementById("name") as HTMLInputElement).value,
@@ -93,8 +93,8 @@ function handleFormSubmit() {
   generateResumePreview(formData);
 }
 
+// Generate and preview resume
 function generateResumePreview(data: ResumeData) {
-  // Create a new window
   const newWindow = window.open("", "_blank");
 
   if (!newWindow) {
@@ -102,7 +102,6 @@ function generateResumePreview(data: ResumeData) {
     return;
   }
 
-  // Create resume content
   const resumeContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -165,7 +164,7 @@ function generateResumePreview(data: ResumeData) {
                 font-size: 16px;
                 line-height: 1.6;
             }
-            .print-btn {
+            .print-btn, .share-btn, .edit-btn {
                 background-color: #28a745;
                 color: white;
                 padding: 10px 20px;
@@ -174,8 +173,12 @@ function generateResumePreview(data: ResumeData) {
                 cursor: pointer;
                 margin-top: 20px;
                 font-size: 16px;
+                text-align: center;
+                display: block;
+                width: 200px;
+                margin: 10px auto;
             }
-            .print-btn:hover {
+            .print-btn:hover, .share-btn:hover, .edit-btn:hover {
                 background-color: #218838;
             }
         </style>
@@ -211,16 +214,30 @@ function generateResumePreview(data: ResumeData) {
             <p>${data.references}</p>
         </div>
         <button class="print-btn" onclick="window.print()">Print Resume</button>
+        <button class="share-btn" onclick="shareResume()">Share Resume</button>
+        <button class="edit-btn" onclick="window.close()">Edit Resume</button>
     </body>
+    <script>
+      function shareResume() {
+        const subject = encodeURIComponent("Check out my resume!");
+        const body = encodeURIComponent(\`Hello,
+
+I wanted to share my resume with you. Please check it out:
+
+${window.location.href}
+
+Best regards,\`);
+
+        window.location.href = \`mailto:?subject=${null}&body=${null}\`;
+      }
+    </script>
     </html>
   `;
 
-  // Write the content to the new window
   newWindow.document.open();
   newWindow.document.write(resumeContent);
   newWindow.document.close();
 }
 
-window.onload = () => {
-  createForm();
-};
+// Initialize the form on page load
+document.addEventListener("DOMContentLoaded", createForm);
