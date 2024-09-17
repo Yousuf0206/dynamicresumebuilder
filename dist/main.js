@@ -1,4 +1,17 @@
 "use strict";
+// // Define the ResumeData interface
+// interface ResumeData {
+//   name: string;
+//   email: string;
+//   phone: string;
+//   address: string;
+//   objective: string;
+//   education: string;
+//   skills: string;
+//   experience: string;
+//   references: string;
+//   picture: File | null;
+// }
 // Create and display the form
 function createForm() {
     const formContainer = document.createElement("div");
@@ -75,6 +88,9 @@ function generateResumePreview(data) {
         alert("Failed to open new window. Please allow popups for this site.");
         return;
     }
+    // Create a unique URL based on the user's name
+    const encodedName = encodeURIComponent(data.name.toLowerCase().replace(/\s+/g, '-'));
+    const uniqueUrl = `${window.location.origin}/resume/${encodedName}`;
     const resumeContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -84,16 +100,25 @@ function generateResumePreview(data) {
         <title>Resume Preview</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+                color: #333;
                 margin: 0;
                 padding: 20px;
+                background-color: #f4f4f4;
+            }
+            .resume-container {
+                max-width: 800px;
+                margin: 0 auto;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
             }
             .resume-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border-bottom: 2px solid #007bff;
-                padding-bottom: 10px;
+                border-bottom: 3px solid #007bff;
+                padding-bottom: 20px;
                 margin-bottom: 20px;
             }
             .resume-header h2 {
@@ -110,30 +135,46 @@ function generateResumePreview(data) {
             }
             .contact-info {
                 margin-top: 10px;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #555;
             }
             .contact-info p {
                 margin: 0;
-                font-size: 14px;
             }
             .contact-info a {
                 text-decoration: none;
                 color: #007bff;
             }
-            .contact-info a:hover {
-                text-decoration: underline;
-            }
             .resume-section {
-                margin-top: 20px;
+                margin-top: 30px;
             }
             .resume-section h3 {
-                margin-bottom: 10px;
-                font-size: 20px;
-                font-weight: bold;
+                font-size: 22px;
                 color: #007bff;
                 border-bottom: 2px solid #007bff;
+                padding-bottom: 5px;
+                margin-bottom: 10px;
+            }
+            .resume-section ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .resume-section ul li {
+                font-size: 16px;
+                line-height: 1.5;
+                padding-left: 20px;
+                position: relative;
+            }
+            .resume-section ul li:before {
+                content: "•";
+                position: absolute;
+                left: 0;
+                color: #007bff;
             }
             .resume-section p {
-                margin: 5px 0;
+                margin: 0 0 10px 0;
                 font-size: 16px;
                 line-height: 1.6;
             }
@@ -157,51 +198,53 @@ function generateResumePreview(data) {
         </style>
     </head>
     <body>
-        <div class="resume-header">
-            <h2>${data.name}</h2>
-            ${data.picture ? `<img src="${URL.createObjectURL(data.picture)}" alt="Profile Picture">` : ""}
+        <div class="resume-container">
+            <div class="resume-header">
+                <h2>${data.name}</h2>
+                ${data.picture ? `<img src="${URL.createObjectURL(data.picture)}" alt="Profile Picture">` : ""}
+            </div>
+            <div class="contact-info">
+                <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+                <p><strong>Phone:</strong> ${data.phone}</p>
+                <p><strong>Address:</strong> ${data.address}</p>
+            </div>
+            <div class="resume-section">
+                <h3>Objective</h3>
+                <p>${data.objective}</p>
+            </div>
+            <div class="resume-section">
+                <h3>Education</h3>
+                <p>${data.education}</p>
+            </div>
+            <div class="resume-section">
+                <h3>Skills</h3>
+                <ul>
+                  ${data.skills.split(',').map(skill => `<li>${skill.trim()}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="resume-section">
+                <h3>Experience</h3>
+                <p>${data.experience}</p>
+            </div>
+            <div class="resume-section">
+                <h3>References</h3>
+                <p>${data.references}</p>
+            </div>
+            <div class="resume-section">
+                <h3>Resume Link</h3>
+                <p>Share your resume using this link: <a href="${uniqueUrl}" target="_blank">${uniqueUrl}</a></p>
+            </div>
+            <button class="print-btn" onclick="window.print()">Print Resume</button>
+            <button class="share-btn" onclick="shareResume()">Share Resume</button>
+            <button class="edit-btn" onclick="window.close()">Edit Resume</button>
         </div>
-        <div class="contact-info">
-            <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
-            <p><strong>Phone:</strong> ${data.phone}</p>
-            <p><strong>Address:</strong> ${data.address}</p>
-        </div>
-        <div class="resume-section">
-            <h3>Objective</h3>
-            <p>${data.objective}</p>
-        </div>
-        <div class="resume-section">
-            <h3>Education</h3>
-            <p>${data.education}</p>
-        </div>
-        <div class="resume-section">
-            <h3>Skills</h3>
-            <p>${data.skills}</p>
-        </div>
-        <div class="resume-section">
-            <h3>Experience</h3>
-            <p>${data.experience}</p>
-        </div>
-        <div class="resume-section">
-            <h3>References</h3>
-            <p>${data.references}</p>
-        </div>
-        <button class="print-btn" onclick="window.print()">Print Resume</button>
-        <button class="share-btn" onclick="shareResume()">Share Resume</button>
-        <button class="edit-btn" onclick="window.close()">Edit Resume</button>
     </body>
     <script>
       function shareResume() {
         const subject = encodeURIComponent("Check out my resume!");
-        const body = encodeURIComponent(\`Hello,
+        const body = encodeURIComponent(\`Hello,\n\nI wanted to share my resume with you. Please check it out here:\n\n${uniqueUrl}\n\nBest regards,\`);
 
-I wanted to share my resume with you. Please check it out:
-
-${window.location.href}
-
-Best regards,\`);
-
-        window.location.href = \`mailto:?subject=${null}&body=${null}\`;
+        window.location.href = \`mailto:?subject=\${subject}&body=\${body}\`;
       }
     </script>
     </html>
