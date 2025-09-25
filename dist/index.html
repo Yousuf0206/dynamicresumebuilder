@@ -3,11 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Resume Builder</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Professional Resume Builder</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div id="app"></div>
+<body>  
+    <!-- Form Wrapper -->
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2>Build Your Professional Resume</h2>
+      </div>
+      <div id="form-container" class="form-body"></div>
+    </div>
+
+    <!-- Output Wrapper -->
+    <div class="output-wrapper hidden" id="output-container">
+      <div class="output-header">
+        <h2>Your Professional Resume</h2>
+      </div>
+      <div class="output-body">
+        <div id="resume-display"></div>
+        <button class="go-back-btn" onclick="location.reload()">Go Back to Edit</button>
+      </div>
+    </div>
+  
+  <!-- Include the compiled TypeScript -->
   <script src="main.js"></script>
 </body>
 </html>

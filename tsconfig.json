@@ -110,10 +110,23 @@
 
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "outDir": "./dist",     // Output folder for compiled JS
-    "rootDir": "./src",     // Source folder for TS files
-    "strict": true
-  }
+    "target": "esnext",               // Target latest JavaScript features
+    "module": "es2022",               // Use ES2022 modules
+    "moduleResolution": "node",       // Resolve Node.js-style modules
+    "outDir": "./dist",               // Output compiled JS files to 'dist'
+    "rootDir": "./src",               // Specify the source TS files directory
+    "strict": true,                   // Enable all strict type-checking options
+    "allowJs": true,                  // Allow JavaScript files in the project
+    "sourceMap": true,                // Generate source maps for debugging
+    "typeRoots": ["node_modules/@types"], // Specify type declaration directories
+    "types": ["node"],                // Include type declarations for Node.js
+    "ignoreDeprecations": "6.0"       // Silence deprecated option warnings for TypeScript 6.0
+  },
+  "include": [
+    "src/**/*"                        // Include all files in 'src'
+, "dist/main.js"  ],
+  "exclude": [
+    "node_modules",                   // Exclude 'node_modules' folder
+    "dist"                            // Exclude output directory
+  ]
 }
